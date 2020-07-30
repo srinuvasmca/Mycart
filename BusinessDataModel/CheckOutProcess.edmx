@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CheckOutProcessModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblBasePromotions">
+          <Key>
+            <PropertyRef Name="PromotionId" />
+          </Key>
+          <Property Name="PromotionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PromotionName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SKUID" Type="int" Nullable="false" />
+          <Property Name="SKUIDQuantity" Type="int" Nullable="false" />
+          <Property Name="PromotionUnitPrice" Type="int" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="AddedOn" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="ParentID" Type="int" />
+        </EntityType>
+        <EntityType Name="tblCart">
+          <Key>
+            <PropertyRef Name="CartID" />
+          </Key>
+          <Property Name="CartID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SKUID" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="AddedOn" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tblSKUIDS">
+          <Key>
+            <PropertyRef Name="SKUId" />
+          </Key>
+          <Property Name="SKUId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="UnitPrice" Type="int" Nullable="false" />
+          <Property Name="AddedOn" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedOn" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_tblActivePromotions_tblSKUIDS">
+          <End Role="tblSKUIDS" Type="Self.tblSKUIDS" Multiplicity="1" />
+          <End Role="tblBasePromotions" Type="Self.tblBasePromotions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSKUIDS">
+              <PropertyRef Name="SKUId" />
+            </Principal>
+            <Dependent Role="tblBasePromotions">
+              <PropertyRef Name="SKUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblCart_tblSKUIDS">
+          <End Role="tblSKUIDS" Type="Self.tblSKUIDS" Multiplicity="1" />
+          <End Role="tblCart" Type="Self.tblCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSKUIDS">
+              <PropertyRef Name="SKUId" />
+            </Principal>
+            <Dependent Role="tblCart">
+              <PropertyRef Name="SKUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CheckOutProcessModelStoreContainer">
+          <EntitySet Name="tblBasePromotions" EntityType="Self.tblBasePromotions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblCart" EntityType="Self.tblCart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSKUIDS" EntityType="Self.tblSKUIDS" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tblActivePromotions_tblSKUIDS" Association="Self.FK_tblActivePromotions_tblSKUIDS">
+            <End Role="tblSKUIDS" EntitySet="tblSKUIDS" />
+            <End Role="tblBasePromotions" EntitySet="tblBasePromotions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblCart_tblSKUIDS" Association="Self.FK_tblCart_tblSKUIDS">
+            <End Role="tblSKUIDS" EntitySet="tblSKUIDS" />
+            <End Role="tblCart" EntitySet="tblCart" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CheckOutProcessModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblBasePromotion">
+          <Key>
+            <PropertyRef Name="PromotionId" />
+          </Key>
+          <Property Name="PromotionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PromotionName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SKUID" Type="Int32" Nullable="false" />
+          <Property Name="SKUIDQuantity" Type="Int32" Nullable="false" />
+          <Property Name="PromotionUnitPrice" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="ParentID" Type="Int32" />
+          <NavigationProperty Name="tblSKUID" Relationship="Self.FK_tblActivePromotions_tblSKUIDS" FromRole="tblBasePromotions" ToRole="tblSKUIDS" />
+        </EntityType>
+        <EntityType Name="tblSKUID">
+          <Key>
+            <PropertyRef Name="SKUId" />
+          </Key>
+          <Property Name="SKUId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UnitPrice" Type="Int32" Nullable="false" />
+          <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tblBasePromotions" Relationship="Self.FK_tblActivePromotions_tblSKUIDS" FromRole="tblSKUIDS" ToRole="tblBasePromotions" />
+          <NavigationProperty Name="tblCarts" Relationship="CheckOutProcessModel.FK_tblCart_tblSKUIDS" FromRole="tblSKUID" ToRole="tblCart" />
+        </EntityType>
+        <Association Name="FK_tblActivePromotions_tblSKUIDS">
+          <End Role="tblSKUIDS" Type="Self.tblSKUID" Multiplicity="1" />
+          <End Role="tblBasePromotions" Type="Self.tblBasePromotion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSKUIDS">
+              <PropertyRef Name="SKUId" />
+            </Principal>
+            <Dependent Role="tblBasePromotions">
+              <PropertyRef Name="SKUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CheckOutProcessEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblBasePromotions" EntityType="Self.tblBasePromotion" />
+          <EntitySet Name="tblSKUIDS" EntityType="Self.tblSKUID" />
+          <AssociationSet Name="FK_tblActivePromotions_tblSKUIDS" Association="Self.FK_tblActivePromotions_tblSKUIDS">
+            <End Role="tblSKUIDS" EntitySet="tblSKUIDS" />
+            <End Role="tblBasePromotions" EntitySet="tblBasePromotions" />
+          </AssociationSet>
+          <EntitySet Name="tblCarts" EntityType="CheckOutProcessModel.tblCart" />
+          <AssociationSet Name="FK_tblCart_tblSKUIDS" Association="CheckOutProcessModel.FK_tblCart_tblSKUIDS">
+            <End Role="tblSKUID" EntitySet="tblSKUIDS" />
+            <End Role="tblCart" EntitySet="tblCarts" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="tblCart">
+          <Key>
+            <PropertyRef Name="CartID" />
+          </Key>
+          <Property Name="CartID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SKUID" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tblSKUID" Relationship="CheckOutProcessModel.FK_tblCart_tblSKUIDS" FromRole="tblCart" ToRole="tblSKUID" />
+        </EntityType>
+        <Association Name="FK_tblCart_tblSKUIDS">
+          <End Type="CheckOutProcessModel.tblSKUID" Role="tblSKUID" Multiplicity="1" />
+          <End Type="CheckOutProcessModel.tblCart" Role="tblCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSKUID">
+              <PropertyRef Name="SKUId" />
+            </Principal>
+            <Dependent Role="tblCart">
+              <PropertyRef Name="SKUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CheckOutProcessModelStoreContainer" CdmEntityContainer="CheckOutProcessEntities">
+          <EntitySetMapping Name="tblBasePromotions">
+            <EntityTypeMapping TypeName="CheckOutProcessModel.tblBasePromotion">
+              <MappingFragment StoreEntitySet="tblBasePromotions">
+                <ScalarProperty Name="PromotionId" ColumnName="PromotionId" />
+                <ScalarProperty Name="PromotionName" ColumnName="PromotionName" />
+                <ScalarProperty Name="SKUID" ColumnName="SKUID" />
+                <ScalarProperty Name="SKUIDQuantity" ColumnName="SKUIDQuantity" />
+                <ScalarProperty Name="PromotionUnitPrice" ColumnName="PromotionUnitPrice" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="AddedOn" ColumnName="AddedOn" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSKUIDS">
+            <EntityTypeMapping TypeName="CheckOutProcessModel.tblSKUID">
+              <MappingFragment StoreEntitySet="tblSKUIDS">
+                <ScalarProperty Name="SKUId" ColumnName="SKUId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="AddedOn" ColumnName="AddedOn" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblCarts">
+            <EntityTypeMapping TypeName="CheckOutProcessModel.tblCart">
+              <MappingFragment StoreEntitySet="tblCart">
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="AddedOn" ColumnName="AddedOn" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="SKUID" ColumnName="SKUID" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CartID" ColumnName="CartID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
